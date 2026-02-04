@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Theft | CyberGuard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Firebase SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        #map {
+            height: 300px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .preview-img {
+            max-width: 100px;
+            margin-top: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="animate-in">
+            <nav>
+                <div class="logo">Cyber<span>Guard</span></div>
+                <a href="index.html" class="btn btn-secondary">Back to Home</a>
+            </nav>
+        </header>
+
+        <main class="animate-in">
+            <div class="card" style="max-width: 800px; margin: 0 auto;">
+                <h2 style="margin-bottom: 2rem; color: var(--primary-color);">File a Theft Complaint</h2>
+
+                <form id="complaintForm">
+                    <div class="form-group">
+                        <label for="ownerName">Owner Name</label>
+                        <input type="text" id="ownerName" class="form-control" required placeholder="Enter full name">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="ownerEmail">Email Address</label>
+                            <input type="email" id="ownerEmail" class="form-control" required
+                                placeholder="name@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="ownerPhone">Phone Number</label>
+                            <input type="tel" id="ownerPhone" class="form-control" required
+                                placeholder="+91 98765 43210">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="vehicleType">Vehicle Type</label>
+                            <select id="vehicleType" class="form-control">
+                                <option value="Car">Car</option>
+                                <option value="Bike">Bike/Motorcycle</option>
+                                <option value="Truck">Truck</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleNo">Vehicle Number</label>
+                            <input type="text" id="vehicleNo" class="form-control" required
+                                placeholder="e.g. AB-12-CD-3456">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="theftDate">Date & Time</label>
+                            <input type="datetime-local" id="theftDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Location (Click on Map)</label>
+                            <input type="text" id="theftLocation" class="form-control" readonly
+                                placeholder="Click map to set location..." required>
+                            <input type="hidden" id="lat">
+                            <input type="hidden" id="lng">
+                        </div>
+                    </div>
+                    <div class="form-group" style="position: relative;">
+                        <div id="map"></div>
+                        <button type="button" id="locateBtn" class="btn btn-secondary"
+                            style="position: absolute; top: 10px; right: 10px; z-index: 999; padding: 5px 10px; font-size: 0.8rem; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);">📍
+                            My Location</button>
+                        <small style="color: var(--text-muted);">Pinpoint the exact location where the vehicle was last
+                            seen.</small>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="vehicleImg">Vehicle Image (with Number Plate)</label>
+                            <input type="file" id="vehicleImg" class="form-control" accept="image/*" required>
+                            <img id="vehicleImgPreview" class="preview-img">
+                        </div>
+                        <div class="form-group">
+                            <label for="rcDoc">RC Document (Image Only)</label>
+                            <input type="file" id="rcDoc" class="form-control" accept="image/*" required>
+                            <p id="rcDocName"
+                                style="font-size: 0.8rem; color: var(--primary-color); display: none; margin-top: 5px;">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Additional Description</label>
+                        <textarea id="description" class="form-control" rows="4"
+                            placeholder="Model, color, unique marks, etc."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Complaint</button>
+                </form>
+
+                <div id="successMessage" style="display: none; text-align: center; margin-top: 2rem;">
+                    <h3 style="color: var(--primary-color);">Complaint Registered!</h3>
+                    <p style="color: var(--text-color); margin: 1rem 0;">Your Complaint ID is: <strong id="displayId"
+                            style="font-size: 1.2rem; color: #fff;"></strong></p>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Please save this ID to track your status.
+                    </p>
+                    <button id="newComplaintBtn" class="btn btn-secondary" style="margin-top: 1rem;">File
+                        Another</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <!-- AI Object Detection (TensorFlow.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/victim.js"></script>
+</body>
+
+</html>

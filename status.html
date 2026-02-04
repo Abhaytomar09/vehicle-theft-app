@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Status | CyberGuard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/chat.css">
+
+    <!-- Firebase SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script src="js/config.js"></script>
+
+    <style>
+        .status-tracker {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .status-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+
+        .status-step.active {
+            opacity: 1;
+            transform: translateX(10px);
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            border: 2px solid transparent;
+        }
+
+        .active .step-icon {
+            background: var(--primary-color);
+            color: #000;
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+
+        .complete .step-icon {
+            background: var(--primary-color);
+            /* Completed steps also green/blue */
+            color: #000;
+        }
+
+        .step-info h4 {
+            margin-bottom: 0.2rem;
+        }
+
+        .step-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="animate-in">
+            <nav>
+                <div class="logo">Cyber<span>Guard</span></div>
+                <a href="index.html" class="btn btn-secondary">Back to Home</a>
+            </nav>
+        </header>
+
+        <main class="animate-in">
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <h2 style="margin-bottom: 1.5rem; color: var(--primary-color);">Check Complaint Status</h2>
+
+                <div class="form-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="searchInput" class="form-control"
+                        placeholder="Enter Complaint ID (e.g. CR-X7...)" style="flex:1;">
+                    <button id="searchBtn" class="btn btn-primary">Track</button>
+                </div>
+
+                <div id="resultContainer"
+                    style="display: none; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <h3 id="resVehicle" style="color:#fff;"></h3>
+                        <p id="resStatus" style="font-size: 1.2rem; font-weight: 600; margin-top: 0.5rem;"></p>
+                    </div>
+
+                    <div class="status-tracker" id="flowTracker">
+                        <!-- Steps injected by JS -->
+                    </div>
+
+                    <!-- Chat Section -->
+                    <div class="chat-container">
+                        <div class="chat-header">🔴 Live Chat with Investigator</div>
+                        <div class="chat-messages" id="chatHistory">
+                            <!-- Messages -->
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="file" id="chatFileInput" style="display: none;">
+                            <button id="attachBtn" class="icon-btn" title="Send File/Image">📎</button>
+                            <input type="text" id="chatInput" placeholder="Type a message...">
+                            <button id="sendMsgBtn" class="btn btn-primary"
+                                style="padding: 8px 20px; border-radius: 20px;">Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <p id="errorMsg"
+                    style="color: var(--secondary-color); text-align: center; margin-top: 1rem; display: none;">
+                    Complaint ID not found.</p>
+            </div>
+        </main>
+    </div>
+    <script src="js/app.js"></script>
+    <script src="js/status.js"></script>
+</body>
+
+</html>

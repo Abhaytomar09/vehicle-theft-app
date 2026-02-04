@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard | Vehicle Theft Reporting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Firebase SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <style>
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .role-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .role-card {
+            text-align: center;
+            padding: 3rem 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .role-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 242, 255, 0.1);
+        }
+
+        .role-card h2 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .role-card p {
+            margin-bottom: 2rem;
+            color: var(--text-muted);
+        }
+
+        .role-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="animate-in">
+            <nav>
+                <div class="logo">Cyber<span>Guard</span></div>
+            </nav>
+        </header>
+
+        <main class="hero animate-in">
+            <h1>Vehicle Theft Reporting System</h1>
+            <p>Secure, fast, and transparent reporting for your stolen vehicle. Connect directly with investigators and
+                track your case in real-time.</p>
+
+            <div class="role-cards">
+                <div class="card role-card">
+                    <span class="role-icon">🚗</span>
+                    <h2>I am a Victim</h2>
+                    <p>Report a stolen vehicle instantly and track the investigation status.</p>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <a href="victim.html" class="btn btn-primary">File Complaint</a>
+                        <a href="status.html" class="btn btn-secondary">Check Status</a>
+                    </div>
+                </div>
+
+                <div class="card role-card">
+                    <span class="role-icon">🕵️‍♂️</span>
+                    <h2>I am an Investigator</h2>
+                    <p>Access the crime database, update case statuses, and manage reports.</p>
+                    <a href="investigator.html" class="btn btn-secondary">Investigator Login</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
